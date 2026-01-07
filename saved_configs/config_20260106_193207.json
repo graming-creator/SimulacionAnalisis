@@ -1,0 +1,14 @@
+{
+  "balance_inicial": 1000,
+  "target_pass": 1000,
+  "trailing_offset": 100,
+  "trailing_freeze_peak": 0,
+  "trailing_frozen": 0,
+  "separator": ",",
+  "date_column": "Periodo",
+  "profit_column": "Profit",
+  "strategy_column": "Strategy",
+  "date_format": "DD/MM/YYYY",
+  "start_day_option": "Cada Lunes",
+  "comision_por_trade": 3.98
+}
