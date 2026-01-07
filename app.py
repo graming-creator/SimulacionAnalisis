@@ -1582,11 +1582,12 @@ def create_daily_financial_summary(tracker, eval_sheets):
         df_merged = reduce(lambda left, right: pd.merge(left, right, on='Date', how='outer'), dfs)
         df_merged = df_merged.fillna(0)
 
-        # Net dia: PnL + Retiros - (Comisiones + Gasto_Cuentas)
-        df_merged['Net_Dia'] = df_merged.get('PnL', 0) + df_merged.get('Retiros', 0) - (df_merged.get('Comisiones', 0) + df_merged.get('Gasto_Cuentas', 0))
+        # Net dia: PnL + Retiros - Gasto_Cuentas (excluir comisiones de gastos)
+        df_merged['Net_Dia'] = df_merged.get('PnL', 0) + df_merged.get('Retiros', 0) - df_merged.get('Gasto_Cuentas', 0)
         df_merged = df_merged.sort_values('Date')
         # Cálculos acumulados
-        df_merged['Cum_Gastos'] = (df_merged.get('Comisiones', 0) + df_merged.get('Gasto_Cuentas', 0)).cumsum()
+        # Acumular solo los gastos de cuentas (evaluaciones/promos/masters). Las comisiones quedan fuera.
+        df_merged['Cum_Gastos'] = df_merged.get('Gasto_Cuentas', 0).cumsum()
         df_merged['Cum_Retiros'] = df_merged.get('Retiros', 0).cumsum()
         df_merged['Cum_PnL'] = df_merged.get('PnL', 0).cumsum()
         df_merged['Net_Cumulado'] = df_merged['Cum_Retiros'] - df_merged['Cum_Gastos']
